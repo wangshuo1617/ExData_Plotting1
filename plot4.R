@@ -1,0 +1,17 @@
+data1<- read.table(file = "household_power_consumption.txt",header = TRUE,sep = ";",quote = "",na.strings = "?",colClasses = c("character","character","numeric","numeric","numeric","numeric","numeric","numeric","numeric"))
+data1$Time<- as.POSIXct(paste(data1$Date,data1$Time),format="%d/%m/%Y %H:%M:%S")
+data1<-data1[,-1]
+data1<- subset(x = data1,subset = (data1$Time>=as.POSIXct("2007-02-01") & data1$Time<as.POSIXct("2007-02-03")))
+par(mfrow=c(2,2),mar=c(4,4,2,2))
+with(data1,plot(Time,Global_active_power,xlab = "",ylab = "Global Active Power",type="l"))
+with(data1,plot(Time,Voltage,type = "l",ylab = "Voltage",xlab = "datetime"))
+with(data1,{
+  with(data1,plot(Time,Sub_metering_1,type = "n",ylab = "Energy sub metering",xlab = ""))
+  with(data1,points(Time,Sub_metering_1,type = "l",col="black"))
+  with(data1,points(Time,Sub_metering_2,type = "l",col="red"))
+  with(data1,points(Time,Sub_metering_3,type = "l",col="blue"))
+  legend("topright",lty=1,col = c("black","red","blue"),legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),cex = 0.7,bty = "n")
+  })
+with(data1,plot(Time,Global_reactive_power,type = "l",ylab = "Global_reactive_power",xlab = "datetime"))
+dev.copy(png,file="plot4.png",height=355,width=627)
+dev.off()
